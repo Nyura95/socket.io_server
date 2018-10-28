@@ -2,11 +2,11 @@
 // module
 var moment = require('moment');
 
-// Variable privée
+// Private variable
 var _logger;
 
 /**
- * Logger personnelle du module
+ * Personal module logger
  * @param {object} logger
  */
 function Logger(logger = console.log) {
@@ -34,14 +34,14 @@ function Logger(logger = console.log) {
 }
 
 /**
- * Défini le niveau de debug voulu
+ * Set the desired debug level
  */
 Logger.prototype.setLevel = function(level = 0) {
   this.options.level = level;
 };
 
 /**
- * Défini si le logger doit être actif
+ * Defined if the logger must be active
  */
 Logger.prototype.active = function(active) {
   if (typeof active === 'boolean') {
@@ -50,7 +50,7 @@ Logger.prototype.active = function(active) {
 };
 
 /**
- * Défini le logger
+ * Set the logger
  */
 Logger.prototype.setLogger = function(logger) {
   if (logger) {
@@ -59,7 +59,7 @@ Logger.prototype.setLogger = function(logger) {
 };
 
 /**
- * Ajoute un message avec le level Info
+ * Add a message with the level Info
  */
 Logger.prototype.info = function(message) {
   if (this.options.level <= this.options.info && this.options.active) {
@@ -68,7 +68,7 @@ Logger.prototype.info = function(message) {
 };
 
 /**
- * Ajoute un message avec le level Debug
+ * Add a message with the level Debug
  */
 Logger.prototype.debug = function(message) {
   if (this.options.level <= this.options.debug && this.options.active) {
@@ -77,7 +77,7 @@ Logger.prototype.debug = function(message) {
 };
 
 /**
- * Ajoute un message avec le level Erreur
+ * Add a message with the level Error
  */
 Logger.prototype.error = function(message) {
   if (this.options.active) {
@@ -86,7 +86,7 @@ Logger.prototype.error = function(message) {
 };
 
 /**
- * Format du message
+ * Message format
  * @param {string} message
  */
 function getMessage(level, message) {
@@ -94,12 +94,12 @@ function getMessage(level, message) {
 }
 
 /**
- * Log un message
+ * Log a message
  * @param {string} message
  */
 function sendMessage(message) {
   _logger(message);
 }
 
-// Une seule instance pour toute l'application
+// One instance for the entire application
 module.exports = new Logger();

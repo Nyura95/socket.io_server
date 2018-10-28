@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Gestion des actions d'un client
+ * Management of a customer's actions
  * @param {string} master
  * @param {Array} clients
  */
@@ -11,7 +11,7 @@ function Action(master, clients) {
 }
 
 /**
- * Envoi un évenement au client maitre
+ * Sending an event to the master client
  * @param {number} id
  * @param {string} event
  * @param {any} message
@@ -25,7 +25,7 @@ Action.prototype.sendMessageToMaster = function(event, message) {
 };
 
 /**
- * Envoi un message à un seul client ciblé par ID
+ * Sending a message to only one customer targeted by ID
  * @param {number} id
  * @param {string} event
  * @param {any} message
@@ -39,7 +39,7 @@ Action.prototype.sendMessageToOne = function(id, event, message) {
 };
 
 /**
- * Envoi un message à tous les autres clients
+ * Send a message to all other customers
  * @param {string} event
  * @param {any} message
  */
@@ -52,7 +52,7 @@ Action.prototype.sendMessageToOthers = function(event, message) {
 };
 
 /**
- * Envoi un message à tous les autres clients
+ * Send a message to all customers
  * @param {string} event
  * @param {any} message
  */

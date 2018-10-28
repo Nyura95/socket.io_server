@@ -1,17 +1,15 @@
 'use strict';
 /**
- * Gestionnaire du serveur io
+ * Io Server Manager
  */
 
-// Déclaration des modules
+// Declaration of the modules
 var http = require('http');
 var socketIO = require('socket.io');
-
-// Modules
 var Clients = require('./clients/index');
 var Events = require('./events');
 
-// Création des variables privées
+// Creating private variables
 var _server = http.createServer();
 var _io = socketIO(_server);
 var _logger = require('./logger');
@@ -37,20 +35,20 @@ function Socket(port, events = [], options = _options) {
       if (typeof port !== 'number') {
         throw 'Le port doit être un nombre';
       }
-      // Changement de la variable privé
+      // Change of the private variable
       _port = port;
-      // Demarrage du serveur sous le nouveau port
+      // Starting the server under the new port
       runServer(_port);
     }
   });
 
-  // assignation du port
+  // port assignment
   this.port = port;
 
-  // Instanciation des clients
+  // Instantiation of clients
   this.clients = new Clients();
 
-  // Instanciation des évenements
+  // Instantiation of events
   this.events = new Events(events);
 
   var _this = this;
@@ -59,19 +57,19 @@ function Socket(port, events = [], options = _options) {
     _logger.debug('Nombre de client(s) connecté(s) : ' + _this.clients.get().length);
   }, 5000);
 
-  // Evenement d'une connexion d'un nouveau client
+  // Event of a new customer connection
   _io.on('connect', function(socket) {
-    // Ajout d'un nouveau client et récuperation
+    // Adding a new customer and recovering
     var client = _this.clients.findOne(_this.clients.add(socket));
 
     if (!client) {
       return;
     }
 
-    // Récuperation des évenements
+    // Get events
     var events = _this.events.get();
 
-    // Ajout des évenemennts
+    // Add all event
     for (let i = 0; i < events.length; i++) {
       socket.on(events[i].name, function(message) {
         events[i].action(message, client);
@@ -79,7 +77,7 @@ function Socket(port, events = [], options = _options) {
     }
 
     socket.on('disconnect', function() {
-      // Suppression du client
+      // Delete the client
       _this.clients.remove(client.id);
     });
   });

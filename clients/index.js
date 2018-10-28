@@ -2,11 +2,11 @@
 var Client = require('./client');
 var _logger = require('../logger');
 
-// private variable
+// Private variable
 var _clients = [];
 
 /**
- * Gestionnaire des clients
+ * Customer Manager
  */
 function Clients() {}
 
@@ -17,49 +17,49 @@ function Clients() {}
  * @returns {string}
  */
 Clients.prototype.add = function(socket, infos = {}) {
-  // Vérifaiction du socket
+  // Socket verification
   if (!socket) {
-    _logger.error("Le socket est obligatoire lors de l'ajout d'un client !");
+    _logger.error('The socket is mandatory when adding a client!');
     return null;
   }
-  // Vérification de la variable infos
+  // Checking the info variable
   if (typeof infos !== 'object') {
-    _logger.error('La variable {infos} doit être un object !');
+    _logger.error('The {infos} variable must be an object!');
     return null;
   }
 
-  // Création d'un nouveau client
+  // Creating a new client
   var client = new Client(socket, infos, _clients);
 
-  _logger.info("Création d'un nouveau client (" + client.id + ') !');
+  _logger.info('Creating a new client (' + client.id + ') !');
 
-  // Ajout du client
+  // Add the client
   _clients.push(client);
 
-  // Retour de l'id du client
+  // Return of the customer's id
   return client.id;
 };
 
 Clients.prototype.update = function(id, infos) {
-  // Vérification des paramètres
+  // Checking the parameters
   if (typeof id !== 'string') {
-    return _logger.error("l'ID d'un client doit être un string");
+    return _logger.error('The ID of a client must be a string');
   }
   if (typeof infos !== 'object') {
-    return _logger.error("Les infos du clients doivent être sous forme d'un object");
+    return _logger.error('Customer info must be in the form of an object');
   }
 
-  // Récuperation de la position du client
+  // Recovery of the customer's position
   var index = getPositionClient(id);
 
-  // Vérification de la présence du client
+  // Verification of the client's presence
   if (index === null) {
-    return _logger.error('Aucun client sous cette ID');
+    return _logger.error('No customers under this ID');
   }
 
-  _logger.info("Modification d'un nouveau client (" + id + ') !');
+  _logger.info('Changing a new customer (' + id + ') !');
 
-  // Modification des infos du client
+  // Editing customer info
   _clients[index].infos = infos;
 };
 
@@ -68,21 +68,21 @@ Clients.prototype.update = function(id, infos) {
  * @param {number} id
  */
 Clients.prototype.remove = function(id) {
-  // Vérifiaction de paramètre
+  // Parameter verification
   if (!id) {
-    throw 'Veuillez passer un id pour supprimer un client';
+    throw 'Please pass an id to delete a customer';
   }
 
-  // Récuperation de la position du client
+  // Recovery of the customer's position
   var index = getPositionClient(id);
 
-  // Vérification de la présence du client dans le tableau
+  // Checking the presence of the customer in the table
   if (index === null) {
-    throw 'Aucun client sous cette ID';
+    throw 'No customers under this ID';
   }
 
-  _logger.info("Suppression d'un client (" + id + ') index : ' + index + ' !');
-  // Suppression du client
+  _logger.info('Deleting a customer (' + id + ') index : ' + index + ' !');
+  // Deleting the client
   _clients.splice(index, 1);
 };
 
@@ -91,21 +91,21 @@ Clients.prototype.remove = function(id) {
  * @param {number} id
  */
 Clients.prototype.findOne = function(id) {
-  // Vérifiaction de paramètre
+  // Parameter verification
   if (!id) {
-    _logger.error('Veuillez passer un id pour trouver un client');
+    _logger.error('Please pass an id to find a customer');
     return null;
   }
 
-  // Récuperation du client
+  // Get customer
   var client = getClient(id);
 
-  // Vérification de la présence du client
+  // Verification of the client's presence
   if (!client) {
-    _logger.error('Aucun client ne possède cet ID (' + id + ')');
+    _logger.error('No customer has this ID (' + id + ')');
   }
 
-  _logger.debug('Récupération du client (' + client.id + ') !');
+  _logger.debug('Get customer (' + client.id + ') !');
 
   // Renvoi du client
   return client;
@@ -116,31 +116,31 @@ Clients.prototype.findOne = function(id) {
  * @param {number[]} ids
  */
 Clients.prototype.findAll = function(ids = []) {
-  // Vérifiaction de paramètre
+  // Parameter verification
   if (!ids) {
-    _logger.error('Veuillez passer des ids pour trouver les clients');
+    _logger.error('Please pass ideas to find customers');
     return null;
   }
 
   if (typeof ids !== 'object' || !Array.isArray(ids)) {
-    _logger.error('Vous devez passer un tableau contenant des ID clients');
+    _logger.error('You must pass a table containing customer IDs');
     return null;
   }
 
-  // Déclaration de la variable de retour
+  // Declaration of the return variable
   var clients = [];
 
   for (let i = 0; i < ids.length; i++) {
-    // Vérification de la variable
+    // Verification of the variable
     if (typeof ids[i] === 'string') {
-      _logger.error('Vous devez envoyer un string pour trouver un client');
+      _logger.error('You have to send a string to find a client');
       continue;
     }
 
-    // Récuperation du cliennt
+    // Get customer
     var client = getClient(ids[i]);
 
-    // Vérification de la présence du client
+    // Verification of the client's presence
     if (!client) {
       _logger.error('Aucun client ne corresponds à cet ID');
       continue;
@@ -148,11 +148,11 @@ Clients.prototype.findAll = function(ids = []) {
 
     _logger.debug('Récupération du client (' + client.id + ') !');
 
-    // Ajout du client dans la variable de retour
+    // Adding the client in the return variable
     clients.push(client);
   }
 
-  // Retour des clients trouvés
+  // Return of customers found
   return clients;
 };
 
@@ -180,7 +180,7 @@ Clients.prototype.set = function(clients = []) {
 };
 
 /**
- * Envoi la position d'un client dans le tableau
+ * Sending a customer's position in the table
  * @param {string} id
  * @returns {number}
  */
@@ -194,7 +194,7 @@ function getPositionClient(id) {
 }
 
 /**
- * Envoi un client
+ * Sending a customer
  * @param {string} id
  * @returns {object} client
  */

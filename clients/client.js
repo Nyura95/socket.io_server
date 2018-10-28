@@ -3,7 +3,7 @@
 var Action = require('./action');
 
 function Client(socket, infos, otherClient) {
-  // Assignation d'un ID unique
+  // Assigning a unique ID
   this.id = Math.random()
     .toString(36)
     .substr(2, 9);

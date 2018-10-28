@@ -2,65 +2,65 @@
 
 var _logger = require('./logger');
 
-// Création des variables privées
+// Creating private variables
 var _events = [];
 
 function Events(events = []) {
-  // Vérification de paramètre
+  // Parameter check
   if (typeof events !== 'object' || !Array.isArray(events)) {
-    throw 'La variable events doit être un tableau';
+    throw 'The events variable must be an array';
   }
 
-  // Vérification des évenements
+  // Checking of events
   for (let i = 0; i < events.length; i++) {
     if (!checkEvent(events[i])) {
-      _logger.error('Un évenement doit être sous la forme {name: string, action: Function}');
+      _logger.error('An event must be in the form {name: string, action: Function}');
       continue;
     }
-    // Ajout dans la variable privée
+    // Add to the private variable
     _events.push(events[i]);
   }
 }
 
 /**
- * Ajout d'un nouvelle évenement
+ * Adding a new event
  * @param {{name: string, action: Function}} event
  * @returns {number}
  */
 Events.prototype.add = function(event) {
-  // Vérification de l'évenement
+  // Verification of the event
   if (!checkEvent(event)) {
-    _logger.error("L'évenement ajouté ne corresponds pas aux critères");
+    _logger.error('Event added does not match the criteria');
     return null;
   }
-  // Ajout de l'évenement dans le tableau
+  // Adding the event in the table
   _events.push(event);
-  // Retour de la place de l'évenement dans le tableau
+  // Return of the place of the event in the table
   return _events.length - 1;
 };
 
 /**
- * Supprime un evenement
+ * Delete an event
  */
 Events.prototype.remove = function(index) {
-  // Vérification du paramètre envoyé
+  // Verification of the sent parameter
   if (typeof index === 'number') {
-    _logger.error('Imposible de supprimer un event');
+    _logger.error('Can not delete an event');
     return null;
   }
-  // suppression de l'évenement dans le tableau
+  // deleting the event in the table
   _event.splice(index, 1);
 };
 
 /**
- * Récuperation de tout les évenements
+ * Get of all events
  */
 Events.prototype.get = function() {
   return _events;
 };
 
 /**
- * Vérification de la conformité de l'object évenement
+ * Verification of the conformity of the event object
  * @param {object} event
  * @return {boolean}
  */
