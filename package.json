@@ -1,0 +1,28 @@
+{
+  "name": "socket.io_server",
+  "version": "1.0.0",
+  "description": "socket.io framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nyura95/socket.io_server.git"
+  },
+  "keywords": [
+    "socket.io",
+    "nodeJS"
+  ],
+  "author": "Alexis Courapied",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nyura95/socket.io_server/issues"
+  },
+  "homepage": "https://github.com/Nyura95/socket.io_server#readme",
+  "dependencies": {
+    "http": "0.0.0",
+    "moment": "^2.22.2",
+    "socket.io": "^2.1.1"
+  }
+}

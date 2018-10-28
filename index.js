@@ -1,65 +1,89 @@
-var express = require('express');
+'use strict';
+/**
+ * Gestionnaire du serveur io
+ */
+
+// Déclaration des modules
 var http = require('http');
 var socketIO = require('socket.io');
-var { remove } = require('lodash');
-var moment = require('moment');
 
-var _events = {
-  connect: function() {},
-  init: function() {},
-  disconnect: function() {}
-};
+// Modules
+var Clients = require('./clients/index');
+var Events = require('./events');
 
-var _clients = [];
-
-var _app = express();
-var _server = http.createServer(_app);
+// Création des variables privées
+var _server = http.createServer();
 var _io = socketIO(_server);
+var _logger = require('./logger');
+var _options = { logger: true, levelLogger: 0, personalLogger: console.log };
 
-function ServerSocket(port, events = {}, options = {}) {
+function Socket(port, events = [], options = _options) {
   // check if port is set
-  if (!port) {
-    throw 'First variable is needed (port) !';
+  if (!port || typeof port !== 'number') {
+    throw 'Veuillez passer un port (nombre) pour demarrez un socket !';
   }
 
-  // assing event
-  this.events = {};
-  // spread operator legacy
-  Object.assign(this.events, _events, events);
+  // level du logger
+  _logger.setLogger(options.personalLogger);
+  _logger.active(options.logger);
+  _logger.setLevel(options.levelLogger);
 
-  var _port = port;
+  var _port = 0;
   Object.defineProperty(this, 'port', {
     get: function() {
       return _port;
     },
     set: function(port) {
-      // change the private variable
+      if (typeof port !== 'number') {
+        throw 'Le port doit être un nombre';
+      }
+      // Changement de la variable privé
       _port = port;
-      // Start the server with this new port
-      runServer(port);
+      // Demarrage du serveur sous le nouveau port
+      runServer(_port);
     }
   });
 
+  // assignation du port
   this.port = port;
 
-  _io.on('connection', function(socket) {
-    console.log('new coonect !');
+  // Instanciation des clients
+  this.clients = new Clients();
+
+  // Instanciation des évenements
+  this.events = new Events(events);
+
+  var _this = this;
+
+  setInterval(function() {
+    _logger.debug('Nombre de client(s) connecté(s) : ' + _this.clients.get().length);
+  }, 5000);
+
+  // Evenement d'une connexion d'un nouveau client
+  _io.on('connect', function(socket) {
+    // Ajout d'un nouveau client et récuperation
+    var client = _this.clients.findOne(_this.clients.add(socket));
+
+    if (!client) {
+      return;
+    }
+
+    // Récuperation des évenements
+    var events = _this.events.get();
+
+    // Ajout des évenemennts
+    for (let i = 0; i < events.length; i++) {
+      socket.on(events[i].name, function(message) {
+        events[i].action(message, client);
+      });
+    }
 
     socket.on('disconnect', function() {
-      console.log('disconnect !');
+      // Suppression du client
+      _this.clients.remove(client.id);
     });
   });
-
-  return this;
 }
-
-/**
- * Stop the server
- */
-ServerSocket.prototype.stop = function() {
-  // run server without port, he will close himself
-  runServer();
-};
 
 /**
  * Private method - run the server with a specific port
@@ -75,9 +99,9 @@ function runServer(port) {
     // start the server
     _server.listen(
       port,
-      error => (error ? _logger.error(error) : console.log(`Socket server listening on port ${port}.`))
+      error => (error ? _logger.error(error) : _logger.info(`Socket server listening on port ${port}.`))
     );
   }
 }
 
-var test = new ServerSocket(3000);
+module.exports = Socket;
