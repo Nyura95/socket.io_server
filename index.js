@@ -18,7 +18,7 @@ var _options = { logger: true, levelLogger: 0, personalLogger: console.log };
 function Socket(port, events = [], options = _options) {
   // check if port is set
   if (!port || typeof port !== 'number') {
-    throw 'Veuillez passer un port (nombre) pour demarrez un socket !';
+    throw 'Please, pass a number for start the server !';
   }
 
   // level du logger
@@ -33,7 +33,7 @@ function Socket(port, events = [], options = _options) {
     },
     set: function(port) {
       if (typeof port !== 'number') {
-        throw 'Le port doit être un nombre';
+        throw 'This variable is only number';
       }
       // Change of the private variable
       _port = port;
@@ -54,7 +54,7 @@ function Socket(port, events = [], options = _options) {
   var _this = this;
 
   setInterval(function() {
-    _logger.debug('Nombre de client(s) connecté(s) : ' + _this.clients.get().length);
+    _logger.debug('Number of connected customers ' + _this.clients.get().length);
   }, 5000);
 
   // Event of a new customer connection
