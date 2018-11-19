@@ -63,7 +63,7 @@ Logger.prototype.setLogger = function(logger) {
  */
 Logger.prototype.info = function(message) {
   if (this.options.level <= this.options.info && this.options.active) {
-    sendMessage(getMessage('Info', message));
+    sendMessage(getMessage('Info', message), 'info');
   }
 };
 
@@ -72,7 +72,7 @@ Logger.prototype.info = function(message) {
  */
 Logger.prototype.debug = function(message) {
   if (this.options.level <= this.options.debug && this.options.active) {
-    sendMessage(getMessage('Debug', message));
+    sendMessage(getMessage('Debug', message), 'debug');
   }
 };
 
@@ -81,7 +81,7 @@ Logger.prototype.debug = function(message) {
  */
 Logger.prototype.error = function(message) {
   if (this.options.active) {
-    sendMessage(getMessage('Error', message));
+    sendMessage(getMessage('Error', message), 'error');
   }
 };
 
@@ -97,8 +97,8 @@ function getMessage(level, message) {
  * Log a message
  * @param {string} message
  */
-function sendMessage(message) {
-  _logger(message);
+function sendMessage(message, action) {
+  _logger[action] ? _logger[action](message) : _logger(message);
 }
 
 // One instance for the entire application
